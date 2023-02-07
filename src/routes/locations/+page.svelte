@@ -205,14 +205,10 @@
         font-family: "Bookman Old Style", serif;
         text-transform: uppercase;
         outline: 0;
-        /*background-color: #328f8a;*/
-        /*background-image: linear-gradient(45deg, #800080, #7f00ff);*/
-        /*width: 100%;*/
         border: 0;
         border-radius: 4px;
         padding: 5px;
         color:black;
-        /*color: #FFFFFF;*/
         font-size: 14px;
         cursor: pointer;
     }
@@ -220,14 +216,10 @@
         font-family: "Bookman Old Style", serif;
         text-transform: uppercase;
         outline: 0;
-        /*background-color: #328f8a;*/
-        /*background-image: linear-gradient(45deg, #800080, #7f00ff);*/
-        /*width: 100%;*/
         border: 0;
         border-radius: 4px;
         padding: 5px;
         color:black;
-        /*color: #FFFFFF;*/
         font-size: 14px;
         cursor: pointer;
     }

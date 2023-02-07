@@ -80,7 +80,6 @@
         font-family:fantasy;
     }
     .login-page{
-        /*background-color: ghostwhite;*/
         background-color:white;
     }
     .form p {
@@ -117,13 +116,11 @@
     {
         width: 100%;
         margin-bottom: 10px;
-        /*background: rgba(0,0,0,0.3);*/
         border: none;
         outline: none;
         padding: 10px;
         font-size: 13px;
         color:black;
-        /*color: #fff;*/
         text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
         border: 1px solid rgba(0,0,0,0.3);
         border-radius: 4px;
