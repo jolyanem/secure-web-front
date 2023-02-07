@@ -4,8 +4,12 @@
 
 <script>
 
+
+
     /** @type {import('./$types').PageData} */
     export let data;
+    let detailLocation = data.response;
+
     import {onMount} from "svelte";
     import {goto} from '$app/navigation';
 
@@ -13,6 +17,15 @@
     export let id;
     import Modal from './Modal.svelte';
     let showModal = false;
+
+    const token = sessionStorage.getItem("token")
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    const payload = JSON.parse(jsonPayload);
+    let roles = payload.role;
 
 
     const baseUrl = 'http://localhost:3000';
@@ -29,6 +42,7 @@
         console.log(locations)
         console.log(data.user)
     })
+
 
     const deleteLocation = async (id) => {
         const token = sessionStorage.getItem("token")
@@ -57,8 +71,10 @@
 
 </script>
 
-<!--{#if data.role == "admin"}-->
+{#if roles === "admin"}
 <button class="add" on:click={() => goto('/add_locations')}>Add</button>
+{/if}
+
 <button class="logout" on:click={() => goto('/login')}>Log Out</button>
 <!--    {/if}-->
 <table class="location-table">
@@ -76,8 +92,10 @@
             <td on:click={() => showModal = {data:location}}>{location.filmName}</td>
             <td>{location.filmDirectorName}</td>
             <td>
+                {#if roles === "admin"}
                 <button class="retrieve" on:click={() => goto('/locations')}>Retrieve</button>
                 <button class="delete"on:click={() => deleteLocation(location._id)}>Delete</button>
+                {/if}
             </td>
         </tr>
     {/each}
@@ -187,10 +205,14 @@
         font-family: "Bookman Old Style", serif;
         text-transform: uppercase;
         outline: 0;
+        /*background-color: #328f8a;*/
+        /*background-image: linear-gradient(45deg, #800080, #7f00ff);*/
+        /*width: 100%;*/
         border: 0;
         border-radius: 4px;
         padding: 5px;
         color:black;
+        /*color: #FFFFFF;*/
         font-size: 14px;
         cursor: pointer;
     }
@@ -198,13 +220,18 @@
         font-family: "Bookman Old Style", serif;
         text-transform: uppercase;
         outline: 0;
+        /*background-color: #328f8a;*/
+        /*background-image: linear-gradient(45deg, #800080, #7f00ff);*/
+        /*width: 100%;*/
         border: 0;
         border-radius: 4px;
         padding: 5px;
         color:black;
+        /*color: #FFFFFF;*/
         font-size: 14px;
         cursor: pointer;
     }
+
 
 </style>
 
