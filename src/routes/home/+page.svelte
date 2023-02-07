@@ -1,8 +1,3 @@
-<script>
-    import { enhance } from '$app/forms';
-    export let form;
-</script>
-
 <svelte:head>
     <title> Sign In </title>
 </svelte:head>
@@ -41,7 +36,6 @@
         font-size: large;
     }
     .login-page{
-        /*background-color: ghostwhite;*/
         background-color:white;
     }
     .form p {

@@ -1,160 +1,171 @@
 <svelte:head>
-    <title> Locations </title>
+    <title> Login Page</title>
 </svelte:head>
 
 <script>
+    import {goto} from '$app/navigation'
+    let username = "", password = "";
 
-    /** @type {import('./$types').PageData} */
-    export let data;
-    let detailLocation = data.response;
+    async function login() {
+        try {
+            const response = await fetch("http://localhost:3000/users/login", {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({username, password})
+            });
 
-    import {onMount} from "svelte";
-    import {goto} from '$app/navigation';
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            sessionStorage.setItem("token", data.jwt);
+            console.log(data.jwt)
+            await goto("/home")
 
-    export let locations = []
-    export let id;
+        }
+        catch (error) {
+            console.error(error);
+            alert("Error")
+        }
 
-    const baseUrl = 'http://localhost:3000';
-    onMount(async () => {
-        const token = sessionStorage.getItem("token")
-        console.log(token)
-        const response = await fetch(`${baseUrl}/locations`, {
-            method: 'GET',
-            headers: {
-                "Content-Type":"application/json",
-                "Authorization":`Bearer ${token}`},
-        });
-        locations = await response.json()
-        console.log(locations)
-    })
-
-    let currentPage = 0;
-    let itemsPerPage = 5;
-
-    function previousPage() {
-        currentPage = currentPage - 1 < 0 ? 0 : currentPage - 1;
     }
-
-    function nextPage(){
-        currentPage = currentPage + 1 >= locations.length / itemsPerPage ? currentPage : currentPage +1;
-    }
-
-    const deleteLocation = async (id) => {
-        const token = sessionStorage.getItem("token")
-        console.log(token)
-        const response = await fetch(`${baseUrl}/locations/`+id, {
-            method: 'DELETE',
-            headers: {
-                "Content-Type":"application/json",
-                "Authorization":`Bearer ${token}`},
-        });
-        locations = await response.json()
-        console.log(locations)
-    };
-
 </script>
 
-<button class="add" on:click={() => goto('/add_locations')}>Add</button>
+<div class="login-page">
 
-<table class="location-table">
-    <thead>
-    <tr>
-        <th class="title1" > Nom du film </th>
-        <th class="title2"> Producteur </th>
-        <th>  </th>
-    </tr>
-    </thead>
+    <div class="auth-page">
+        <div class="container page">
+            <div class="row">
+                <div class="form">
 
-    <tbody>
-    {#each locations as location}
-        <tr>
-            <td>{location.filmName}</td>
-            <td>{location.filmDirectorName}</td>
-            <td>
-                <button class="details" on:click={() => goto(`/locations/${location._id}`)}>Details</button>
-                <button class="retrieve" on:click={() => goto('/retrieve_locations')}>Retrieve</button>
-                <button class="delete"on:click={() => deleteLocation(location._id)}>Delete</button>
-            </td>
-        </tr>
-    {/each}
-    </tbody>
-</table>
+                    <h1 class="welcome-text">LOGIN</h1>
+                    <p class="register-text">
+                        <a href="/register">Need an account ?</a>
+                    </p>
 
-<button on:click="{previousPage()}"> Précédent </button>
-<button on:click="{nextPage()}"> Suivant </button>
+                    <form on:submit|preventDefault={login}>
+                        <input
+                                bind:value={username}
+                                class="form-username"
+                                name="username"
+                                type="username"
+                                required
+                                placeholder="Username"
+                        />
+                        <input
+                                bind:value={password}
+                                class="form-password"
+                                name="password"
+                                type="password"
+                                required
+                                placeholder="Password"
+                        />
+                        <button class="form-button" type="submit">Sign in</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <style>
-    .title1 {
+    .welcome-text{
         font-family: Impact;
-        font-weight: normal;
     }
-    .title2 {
-        font-family: Impact;
-        font-weight: normal;
+
+    .register-text {
+        font-family:fantasy;
     }
-    .location-table {
-        width: 85%;
-        border-collapse: collapse;
+    .login-page{
+        /*background-color: ghostwhite;*/
+        background-color:white;
+    }
+    .form p {
+        margin: 20px 0;
+        font-size: 11px;
+        color: white;
         text-align: center;
-        margin: auto;
+        text-shadow: 0 0.5px #2a85a1;
+    }
+    .form a{
+        color: olive;
+        text-decoration: none;
+    }
+    .form a:hover {
+        text-decoration: underline;
+    }
+    .auth-page {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -150px 0 0 -150px;
+        width:300px;
+        height:300px;
     }
 
-    .location-table th, .location-table td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
+    .auth-page h1 {
+        color: black;
+        text-shadow: 0 0 1px
+        rgba(0,0,0,0.3);
+        letter-spacing:1px;
+        text-align:center; }
+
+    .form-username
+    {
+        width: 100%;
+        margin-bottom: 10px;
+        /*background: rgba(0,0,0,0.3);*/
+        border: none;
+        outline: none;
+        padding: 10px;
+        font-size: 13px;
+        color:black;
+        /*color: #fff;*/
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+        border: 1px solid rgba(0,0,0,0.3);
+        border-radius: 4px;
+        box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px 1px rgba(255,255,255,0.2);
+        -webkit-transition: box-shadow .5s ease;
+        -moz-transition: box-shadow .5s ease;
+        -o-transition: box-shadow .5s ease;
+        -ms-transition: box-shadow .5s ease;
+        transition: box-shadow .5s ease;
     }
 
-    .location-table th {
-        background-color: plum;
+    .form-password
+    {
+        width: 100%;
+        margin-bottom: 10px;
+        border: none;
+        outline: none;
+        padding: 10px;
+        font-size: 13px;
+        color: black;
+        text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+        border: 1px solid rgba(0,0,0,0.3);
+        border-radius: 4px;
+        box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px 1px rgba(255,255,255,0.2);
+        -webkit-transition: box-shadow .5s ease;
+        -moz-transition: box-shadow .5s ease;
+        -o-transition: box-shadow .5s ease;
+        -ms-transition: box-shadow .5s ease;
+        transition: box-shadow .5s ease;
     }
 
-    .location-table tr:hover {
-        background-color: slategrey;
-    }
-
-    .details {
+    .form-button {
         font-family: "Roboto", sans-serif;
         text-transform: uppercase;
         outline: 0;
-        /*background-color: #328f8a;*/
-        /*background-image: linear-gradient(45deg, #800080, #7f00ff);*/
-        /*width: 100%;*/
+        background-color: #328f8a;
+        background-image: linear-gradient(45deg,#800080, #7f00ff);
+        width: 106.7%;
         border: 0;
         border-radius: 4px;
-        padding: 5px;
-        color:black;
-        /*color: #FFFFFF;*/
-        font-size: 14px;
-        cursor: pointer;
-    }
-    .retrieve{
-        font-family: "Roboto", sans-serif;
-        text-transform: uppercase;
-        outline: 0;
-        /*background-color: #328f8a;*/
-        /*background-image: linear-gradient(45deg, #800080, #7f00ff);*/
-        /*width: 100%;*/
-        border: 0;
-        border-radius: 4px;
-        padding: 5px;
-        color:black;
-        /*color: #FFFFFF;*/
-        font-size: 14px;
-        cursor: pointer;
-    }
-    .delete{
-        font-family: "Roboto", sans-serif;
-        text-transform: uppercase;
-        outline: 0;
-        /*background-color: #328f8a;*/
-        /*background-image: linear-gradient(45deg, #800080, #7f00ff);*/
-        /*width: 100%;*/
-        border: 0;
-        border-radius: 4px;
-        padding: 5px;
-        color:black;
-        /*color: #FFFFFF;*/
+        padding: 15px;
+        color: #FFFFFF;
         font-size: 14px;
         cursor: pointer;
     }

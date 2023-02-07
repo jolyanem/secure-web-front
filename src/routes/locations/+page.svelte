@@ -6,13 +6,14 @@
 
     /** @type {import('./$types').PageData} */
     export let data;
-    let detailLocation = data.response;
-
     import {onMount} from "svelte";
     import {goto} from '$app/navigation';
 
     export let locations = []
     export let id;
+    import Modal from './Modal.svelte';
+    let showModal = false;
+
 
     const baseUrl = 'http://localhost:3000';
     onMount(async () => {
@@ -26,18 +27,8 @@
         });
         locations = await response.json()
         console.log(locations)
+        console.log(data.user)
     })
-
-    let currentPage = 0;
-    let itemsPerPage = 5;
-
-    function previousPage() {
-        currentPage = currentPage - 1 < 0 ? 0 : currentPage - 1;
-    }
-
-    function nextPage(){
-        currentPage = currentPage + 1 >= locations.length / itemsPerPage ? currentPage : currentPage +1;
-    }
 
     const deleteLocation = async (id) => {
         const token = sessionStorage.getItem("token")
@@ -50,12 +41,26 @@
         });
         locations = await response.json()
         console.log(locations)
+        window.location.reload();
     };
+
+    let currentPage = 1;
+    let itemsPerPage = 5;
+
+    function previousPage() {
+        currentPage = currentPage - 1 < 0 ? 0 : currentPage - 1;
+    }
+
+    function nextPage(){
+        currentPage = currentPage + 1 >= locations.length / itemsPerPage ? currentPage : currentPage +1;
+    }
 
 </script>
 
+<!--{#if data.role == "admin"}-->
 <button class="add" on:click={() => goto('/add_locations')}>Add</button>
-
+<button class="logout" on:click={() => goto('/login')}>Log Out</button>
+<!--    {/if}-->
 <table class="location-table">
     <thead>
     <tr>
@@ -66,24 +71,89 @@
     </thead>
 
     <tbody>
-    {#each locations as location}
+    {#each locations.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage) as location}
         <tr>
-            <td>{location.filmName}</td>
+            <td on:click={() => showModal = {data:location}}>{location.filmName}</td>
             <td>{location.filmDirectorName}</td>
             <td>
-                <button class="details" on:click={() => goto(`/locations/${location._id}`)}>Details</button>
-                <button class="retrieve" on:click={() => goto('/retrieve_locations')}>Retrieve</button>
+                <button class="retrieve" on:click={() => goto('/locations')}>Retrieve</button>
                 <button class="delete"on:click={() => deleteLocation(location._id)}>Delete</button>
             </td>
         </tr>
     {/each}
     </tbody>
+
 </table>
 
-<button on:click="{previousPage()}"> Précédent </button>
-<button on:click="{nextPage()}"> Suivant </button>
+<div class="buttons">
+    <button class="previous" on:click={previousPage}>Previous</button>
+    <button class="next" on:click={nextPage}>Next</button>
+</div>
+
+
+{#if showModal}
+    <Modal close={() => showModal = false} data={showModal.data} />
+{/if}
+
 
 <style>
+
+    .logout {
+        padding: 10px 20px;
+        background-color: lightgrey;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        width: 100px;
+        margin: 0 auto;
+    }
+
+    .add {
+        padding: 10px 20px;
+        background-color: lightgrey;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        width: 100px;
+        margin: 0 auto;
+    }
+
+    .logout:hover {
+        background: lavender;
+    }
+
+    .add:hover {
+        background-color: lavender;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .previous, .next {
+        padding: 10px 20px;
+        background-color: lightgray;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .previous:hover, .next:hover {
+        background-color: gray;
+    }
+
+
     .title1 {
         font-family: Impact;
         font-weight: normal;
@@ -93,7 +163,7 @@
         font-weight: normal;
     }
     .location-table {
-        width: 85%;
+        width: 100%;
         border-collapse: collapse;
         text-align: center;
         margin: auto;
@@ -106,56 +176,35 @@
     }
 
     .location-table th {
-        background-color: plum;
+        background-color: blanchedalmond;
     }
 
     .location-table tr:hover {
         background-color: slategrey;
     }
 
-    .details {
-        font-family: "Roboto", sans-serif;
-        text-transform: uppercase;
-        outline: 0;
-        /*background-color: #328f8a;*/
-        /*background-image: linear-gradient(45deg, #800080, #7f00ff);*/
-        /*width: 100%;*/
-        border: 0;
-        border-radius: 4px;
-        padding: 5px;
-        color:black;
-        /*color: #FFFFFF;*/
-        font-size: 14px;
-        cursor: pointer;
-    }
     .retrieve{
-        font-family: "Roboto", sans-serif;
+        font-family: "Bookman Old Style", serif;
         text-transform: uppercase;
         outline: 0;
-        /*background-color: #328f8a;*/
-        /*background-image: linear-gradient(45deg, #800080, #7f00ff);*/
-        /*width: 100%;*/
         border: 0;
         border-radius: 4px;
         padding: 5px;
         color:black;
-        /*color: #FFFFFF;*/
         font-size: 14px;
         cursor: pointer;
     }
     .delete{
-        font-family: "Roboto", sans-serif;
+        font-family: "Bookman Old Style", serif;
         text-transform: uppercase;
         outline: 0;
-        /*background-color: #328f8a;*/
-        /*background-image: linear-gradient(45deg, #800080, #7f00ff);*/
-        /*width: 100%;*/
         border: 0;
         border-radius: 4px;
         padding: 5px;
         color:black;
-        /*color: #FFFFFF;*/
         font-size: 14px;
         cursor: pointer;
     }
+
 </style>
+

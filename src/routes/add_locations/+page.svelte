@@ -14,7 +14,7 @@
     export let year;
     import {goto} from '$app/navigation'
 
-    const addLocation = async() => {
+    const addLocation = async () => {
         const token = sessionStorage.getItem("token")
         console.log(token)
         const response = await fetch(`http://localhost:3000/locations`, {
@@ -40,8 +40,9 @@
         console.log(data);
     }
 </script>
-
+<button class="goback" on:click={() => goto('/locations')}>Go back</button>
 <form>
+
     <input
             bind:value={filmName}
             type="text"
@@ -84,9 +85,11 @@
 <button class="add" on:click={() => {
   addLocation();
   goto(`/locations`);}}>
-    ADD</button>
+    ADD
+</button>
 
 <style>
+
     form {
         display: flex;
         flex-direction: column;
@@ -95,7 +98,10 @@
         padding: 40px;
         background-color: #f2f2f2;
         border-radius: 10px;
+        width:80%;
+        margin: 50px auto;
     }
+
 
     input[type="text"] {
         width: 100%;
@@ -112,7 +118,19 @@
         box-shadow: 0 0 10px #555;
         outline: none;
     }
+
+    .add {
+        padding: 10px 20px;
+        background-color: lightgrey;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        width: 100px;
+        margin: 0 auto;
+    }
 </style>
-
-
-

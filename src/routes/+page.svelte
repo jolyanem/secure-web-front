@@ -8,6 +8,8 @@
 </svelte:head>
 
 <div class="login-page">
+    <div class="image-div">
+    </div>
 
     <div class="auth-page">
         <div class="container page">
@@ -41,6 +43,9 @@
     .login-page{
         /*background-color: ghostwhite;*/
         background-color:white;
+        background-image:url(/static/img.png);
+        background-size: cover;
+        background-position: center;
     }
     .form p {
         margin: 20px 0;
@@ -72,6 +77,14 @@
         letter-spacing:1px;
         text-align:center; }
 
+    .image-div {
+        width: 300px;
+        height: 300px;
+        background-image: url(/static/locations_in_paris.jpg);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 </style>
 
 
