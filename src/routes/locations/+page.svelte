@@ -4,8 +4,6 @@
 
 <script>
 
-
-
     /** @type {import('./$types').PageData} */
     export let data;
     let detailLocation = data.response;
@@ -18,14 +16,6 @@
     import Modal from './Modal.svelte';
     let showModal = false;
 
-    const token = sessionStorage.getItem("token")
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-    const payload = JSON.parse(jsonPayload);
-    let roles = payload.role;
 
 
     const baseUrl = 'http://localhost:3000';
@@ -42,6 +32,16 @@
         console.log(locations)
         console.log(data.user)
     })
+
+
+    //const token = sessionStorage.getItem("token")
+    // const base64Url = token.split('.')[1];
+    // const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    // const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    //     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    // }).join(''));
+    // const payload = JSON.parse(jsonPayload);
+    // let roles = payload.role;
 
 
     const deleteLocation = async (id) => {
@@ -71,12 +71,12 @@
 
 </script>
 
-{#if roles === "admin"}
+<!--{#if roles === "admin"}-->
 <button class="add" on:click={() => goto('/add_locations')}>Add</button>
-{/if}
+<!--{/if}-->
 
 <button class="logout" on:click={() => goto('/login')}>Log Out</button>
-<!--    {/if}-->
+
 <table class="location-table">
     <thead>
     <tr>
@@ -92,10 +92,10 @@
             <td on:click={() => showModal = {data:location}}>{location.filmName}</td>
             <td>{location.filmDirectorName}</td>
             <td>
-                {#if roles === "admin"}
+                <!--{#if roles === "admin"}-->
                 <button class="retrieve" on:click={() => goto('/locations')}>Retrieve</button>
                 <button class="delete"on:click={() => deleteLocation(location._id)}>Delete</button>
-                {/if}
+                <!--{/if}-->
             </td>
         </tr>
     {/each}
