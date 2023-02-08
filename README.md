@@ -25,14 +25,16 @@ Mon application est composée d'une login page (contenant un lien vers la page r
 As a logged-in user, I want to see locations and be able to click on one location to
 open a modal containing details, so that the website is useful
  ### US4 : 
-As an “admin" user, I want to see a “Add Location” button in the location page, so
+As an logged-in-user, I want to see a “Add Location” button in the location page, so
 that I can create a new location
 ### US6 : 
-As an “admin" user, I want to see a button to delete locations in the array of
+As an logged-in-user, I want to see a button to delete locations in the array of
 locations so that I can delete existing locations
 
-So : 
-The button `RETRIEVE` doesn't work, it is here but it doesn't work. 
+ 
+Le bouton `RETRIEVE` ne fonctionne pas. 
+Aussi, les rôles fonctionnaient pour le bouton add mais empêchaient le bouton delete d'assurer sa fonctionnalité pour l'administrateur, le code est présent mais j'ai préféré garder la fonctionnalité du bouton delete que de permettre aux différents rôles d'assurer leurs fonctionnalités. 
+
 
 
 
