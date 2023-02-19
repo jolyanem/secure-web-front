@@ -17,7 +17,7 @@
     const addLocation = async () => {
         const token = sessionStorage.getItem("token")
         console.log(token)
-        const response = await fetch(`http://localhost:3000/locations`, {
+        const response = await fetch(`https://locations-backend.onrender.com/locations`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

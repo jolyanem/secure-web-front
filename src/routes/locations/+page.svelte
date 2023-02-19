@@ -18,7 +18,7 @@
 
 
 
-    const baseUrl = 'http://localhost:3000';
+    const baseUrl = 'https://locations-backend.onrender.com';
     onMount(async () => {
         const token = sessionStorage.getItem("token")
         console.log(token)
